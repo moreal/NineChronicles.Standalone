@@ -14,6 +14,17 @@ jobs:
         with:
           submodules: recursive
           node-version: '14'
+      - uses: action/setup-dotnet@v1.7.2
+        name: Set up .NET Core SDK
+        with:
+          dotnet-version: '3.1.406'
+      - name: Build GraphQL Schema
+        run: |
+          dotnet restore
+          dotnet build
+          dotnet run -p NineChronicles.Headless.Executable -- --graphql-server --graphql-port 30000 --graphql-host localhost &
+          sleep 10
+          wget http://localhost:3000/schema.graphql -O schema.graphql
       - name: Cache node modules
         uses: actions/cache@v2
         env:
