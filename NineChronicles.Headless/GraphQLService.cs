@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using GraphQL.Server;
+using GraphQL.Server.Transports.Subscriptions.Abstractions;
 using GraphQL.Server.Ui.Playground;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -129,7 +130,7 @@ namespace NineChronicles.Headless
                         options =>
                         {
                             options.AddPolicy(
-                                UserPolicyKey, 
+                                UserPolicyKey,
                                 p => p.RequireClaim(ClaimTypes.Role, "User"));
                             options.AddPolicy(
                                 LocalPolicyKey,
@@ -138,6 +139,7 @@ namespace NineChronicles.Headless
                                         "role",
                                         "Admin"));
                         });
+                services.AddTransient<IOperationMessageListener, AuthenticationListener>();
                 services.AddGraphTypes();
             }
 
